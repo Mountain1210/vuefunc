@@ -3,8 +3,8 @@
         <ul>
             <li 
             v-for="(item,index) in tabs" 
-            :class="{active:index == num}"
-             @click="tab(index)">{{item}}</li>
+            :class="{actives:index == num}"
+             @click="tab(index)">{{item}}=={{num}}</li>
         </ul>
         <div class="tabCon">
             <div 
@@ -25,6 +25,7 @@ export default {
     },
     methods: {
         tab(index) {
+        console.log(index)
             this.num = index;
         }
     }

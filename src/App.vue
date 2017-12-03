@@ -3,12 +3,13 @@
     <img src="./assets/logo.png">
     <HelloWorld/>
     <Tabs/>
-  </div>
+    </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
 import Tabs from './components/Tabs'
+import VueweChat from './components/VueweChat'
 
 export default {
   name: 'app',
