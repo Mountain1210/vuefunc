@@ -1,3 +1,10 @@
+/*
+vue的特点是一定要有一个变量记录(即标志在data里面）
+
+
+ */
+
+
 <template>
   <div class="hello">
    <div class="menumanage" style="border:1px solid #e4e4e4; border-bottom:none">
