@@ -1,8 +1,8 @@
 <template>
- <li class="mu">{{name}}
+ <li class="mu" @click="$emit('select')">{{name}}
 <div id="triangledown"></div>
-                                <ul class="submenu">
-                                    <li class="addsubmenu">+</li>
+                                <ul class="submenu" >
+                                    <li class="addsubmenu" @click.stop="$emit('addsub')">+</li>
                                 </ul>
                             </li>
                             
@@ -11,7 +11,7 @@
 <script>
 export default {
     name:'mainli',
-    props:['name'],
+    props:["name"],
     data(){
         return {
             

@@ -1,8 +1,6 @@
 <template>
  <li class="mu">
- 123123123
-
-                            </li>
+</li>
                             
 </template>
 
@@ -12,7 +10,7 @@ export default {
     props:[name],
     data(){
         return {
-            name:"AAAA"
+            name:""
         }
     }
 }
