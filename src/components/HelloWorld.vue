@@ -162,7 +162,7 @@ export default {
          addrSelected:0,
          type:"",
          feastselected:"中秋大礼包２０１７",
-         isAdd:false
+         isAdd:true
          }
     },
     mounted:function(){
@@ -192,6 +192,7 @@ export default {
             //this.addrSelected=0;
             this.isShow=true;
             this.isHide=false;
+            console.table(this.tabs)
             this.muname=this.$refs.inputname.value=this.tabs[this.num].name;            
             this.type=this.tabs[this.num].maintype.type;
 
@@ -205,6 +206,8 @@ export default {
                      alsubtype[i].style.display="none";
                 }
             }
+
+            console.log(1111111111111111111)
             switch(this.type){
                 case "h5":
                     this.inputh5=this.$refs.h5.value=this.tabs[this.num].maintype.h5;
@@ -251,21 +254,74 @@ export default {
 
         }
         ,preview(){
+//console.log(this.isShow)
+        if(this.isHide){
+          return false;
+        }
+        //alert(this.isAdd)
             if(this.isAdd){
-                  let itemjson={};
-                  itemjson.name=this.$refs.inputname.value;
-                  this.tabs.push(itemjson);
-                  this.addshow=!this.addshow;
-                  this.num=this.tabs.length-1;
+                  let itemjson={id:'1','name':'','maintype':{"type":"",
+                                                         "h5":"",
+                                                         "imgtxt":"",
+                                                         "feast":"",
+                                                         "online":{
+                                                             "name":"",
+                                                             "imghead":"",
+                                                             "autoreply":""
+                                                         }},'sublist':[]}
+                  switch(this.addrSelected){
+                    case 0:
+                    
+                            itemjson.maintype.type="h5";
+                             itemjson.name=this.$refs.inputname.value;
+                            this.tabs.push(itemjson);
+                            this.addshow=!this.addshow;
+                            this.num=this.tabs.length-1;     
+                            console.log(this.tabs)
+                    break;
+
+                    case "1":
+
+                    break;
+
+                    default:
+
+
+                  }
+
+                 
+
             }else{
  
                 var currenttype=this.tabs[this.num].maintype.type;
+               /*
+                 {id:'1','name':'标题1','maintype':{"type":"h5",
+                                                         "h5":"www.163.com",
+                                                         "imgtxt":"",
+                                                         "feast":"",
+                                                         "online":{
+                                                             "name":"",
+                                                             "imghead":"",
+                                                             "autoreply":""
+                                                         }},'sublist':[]}
                
+
+
+
+                */
+               
+               console.log(currenttype)
                 switch(currenttype){
                     case "h5":
                     this.tabs[this.num].name=this.muname;
                     this.tabs[this.num].maintype.h5=this.inputh5;
+                    this.tabs[this.num].maintype.type="h5";
+                    console.log(this.tabs)
                     break;
+
+                    case "imgtxt":
+                     
+                     break;
                 }
             }
         }
