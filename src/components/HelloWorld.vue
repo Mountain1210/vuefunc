@@ -277,11 +277,16 @@ export default {
                             this.tabs.push(itemjson);
                             this.addshow=!this.addshow;
                             this.num=this.tabs.length-1;     
-                            console.log(this.tabs)
+                            
                     break;
 
-                    case "1":
-
+                    case 1:
+                            itemjson.maintype.type="imgtxt";
+                             itemjson.name=this.$refs.inputname.value;
+                             itemjson.maintype.imgtxt=this.chk
+                            this.tabs.push(itemjson);
+                            this.addshow=!this.addshow;
+                            this.num=this.tabs.length-1;  
                     break;
 
                     default:
