@@ -68,33 +68,23 @@ vue的特点是一定要有一个变量记录(即标志在data里面）
                                     </div>
                                     <div class="subtype imgtxt" v-show="subishow">
                                         <ul>
-                                            <li>
+                                            <li  v-for="(item, index) in artstruct" :class="{check:chk==index}" @click="tabchk(index)">
                                                 <img>
-                                                <p>空的</p>
+                                                <p>{{item.name}}</p>
                                             </li>
-                                            <li>
-                                                <img>
-                                                <p>上文下图</p>
-                                            </li>
-                                            <li>
-                                                <img>
-                                                <p>上下文中图</p>
-                                            </li>
-                                            <li>
-                                                <img>
-                                                <p>上文下图</p>
-                                            </li>
+                         
                                         </ul>
                                     </div>
                                     <div class="subtype feast" v-show="subishow">
                                         <p>可以绑定已发布的活动，用户点击此菜单可以跳转至相应活动页面</p>
                                         <div class="">　　活动:
-                                            <select name="">
-                                                <option value="中秋大礼包２０１７">中秋大礼包２０１７</option>
-                                                <option value="中秋大礼包２０１８">中秋大礼包２０１８</option>
-                                                <option value="中秋大礼包２０１９">中秋大礼包２０１９</option>
-                                                <option value="中秋大礼包２０２０">中秋大礼包２０２０</option>
+                                            <select name=""  v-model="feastselected" >
+                                                 v-for="(opt,index) in selectArray"
+                                                  <template   v-for="(opt,index) in selectArray">
+                                                <option :value="opt">{{opt}}</option>
+                                                </template>
                                             </select>
+                                            Select:{{feastselected}}
                                         </div>
                                     </div>
                                     <div class="subtype online" v-show="subishow">
@@ -148,7 +138,7 @@ export default {
                                             "name":"",
                                             "imghead":"",
                                             "autoreply":""
-                                        }},'sublist':[]},{id:'2','name':'标题2','maintype':{"type":"imgtxt",
+                                        }},'sublist':[]},{id:'2','name':'标题2','maintype':{"type":"feast",
                                         "h5":"",
                                         "imgtxt":"0",
                                         "feast":"",
@@ -157,9 +147,12 @@ export default {
                                             "imghead":"",
                                             "autoreply":""
                                         }},'sublist':[]}],
+         artstruct:[{"imgurl":"","name":"空的"},{"imgurl":"","name":"上文下图"},{"imgurl":"","name":"上下文中图"},{"imgurl":"","name":"上文下图"}],
          subtab: [{'spainid':'h5','inputid':'one','labelval':'H5链接'}, {'spainid':'imgtxt','inputid':'two','labelval':'图文模板'},{'spainid':'feast','inputid':'three','labelval':'活动'},{'spainid':'online','inputid':'four','labelval':'在线客服'}],
          num: 0,
          subnum:0,
+         chk:0,
+         selectArray:["中秋大礼包２０１７","中秋大礼包２０１８","中秋大礼包２０１９","中秋大礼包２０２０"],
          inputh5:'',
          isShow:false,
          isHide:true,
@@ -168,7 +161,8 @@ export default {
          subishow:false,
          addrSelected:0,
          type:"",
-
+         feastselected:"中秋大礼包２０１７",
+         isAdd:false
          }
     },
     mounted:function(){
@@ -182,19 +176,24 @@ export default {
         this.$refs.addmu.style.width="66%";
         this.$refs.addmu.style.borderLeft="1px solid #e4e4e4";
        }
-
     },
     methods: {
+        tabchk(inx){
+        console.log(this.addrSelected);
+            this.chk=inx;
+        },
+        chooseopt(e){
+  
+            console.log(e)
+        },
         tab(index) {
             this.num = index;
-            this.addrSelected=0;
+            this.isAdd=false;
+            //this.addrSelected=0;
             this.isShow=true;
             this.isHide=false;
-            this.muname=this.$refs.inputname.value=this.tabs[this.num].name;
-            this.inputh5=this.$refs.h5.value=this.tabs[this.num].maintype.h5;
+            this.muname=this.$refs.inputname.value=this.tabs[this.num].name;            
             this.type=this.tabs[this.num].maintype.type;
-
-
 
             var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
              for (let i=0;i<alsubtype.length;i++){
@@ -206,8 +205,21 @@ export default {
                      alsubtype[i].style.display="none";
                 }
             }
+            switch(this.type){
+                case "h5":
+                    this.inputh5=this.$refs.h5.value=this.tabs[this.num].maintype.h5;
+                break;
+                case "imgtxt":
+                    this.chk=this.tabs[this.num].maintype.imgtxt;
+                case "feast":
+                    this.feastselected=this.feastselected;
+                    default:
+            }
+
+
         }
         ,subtabs(inx){       
+        this.addrSelected=inx;
          var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
             for (let i=0;i<alsubtype.length;i++){
                 if(i==inx){
@@ -221,18 +233,41 @@ export default {
             alert(1234)
         }
         ,addmenu(){
-         var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype')
+        this.isAdd=true;
+         var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
+         this.subnum=this.chk=0;
+         this.addrSelected=0;
+         this.inputh5='';
           this.isShow=true;
           this.isHide=false;
           this.muname="";
           alsubtype[0].style.display="block";
+          for (let i=0;i<alsubtype.length;i++){
+                if(i>0){             
+                     alsubtype[i].style.display="none";
+                     //this.subishow=this.subishow;
+                }
+            }
+
         }
         ,preview(){
-          let itemjson={};
-          itemjson.name=this.$refs.inputname.value;
-          this.tabs.push(itemjson);
-          this.addshow=!this.addshow;
-          this.num=this.tabs.length-1;
+            if(this.isAdd){
+                  let itemjson={};
+                  itemjson.name=this.$refs.inputname.value;
+                  this.tabs.push(itemjson);
+                  this.addshow=!this.addshow;
+                  this.num=this.tabs.length-1;
+            }else{
+ 
+                var currenttype=this.tabs[this.num].maintype.type;
+               
+                switch(currenttype){
+                    case "h5":
+                    this.tabs[this.num].name=this.muname;
+                    this.tabs[this.num].maintype.h5=this.inputh5;
+                    break;
+                }
+            }
         }
     }
 }
