@@ -192,7 +192,7 @@ export default {
             //this.addrSelected=0;
             this.isShow=true;
             this.isHide=false;
-            console.table(this.tabs)
+            console.table(this.tabs);
             this.muname=this.$refs.inputname.value=this.tabs[this.num].name;            
             this.type=this.tabs[this.num].maintype.type;
 
@@ -207,7 +207,6 @@ export default {
                 }
             }
 
-            console.log(1111111111111111111)
             switch(this.type){
                 case "h5":
                     this.inputh5=this.$refs.h5.value=this.tabs[this.num].maintype.h5;
@@ -254,11 +253,9 @@ export default {
 
         }
         ,preview(){
-//console.log(this.isShow)
-        if(this.isHide){
-          return false;
-        }
-        //alert(this.isAdd)
+            if(this.isHide){
+              return false;
+            }
             if(this.isAdd){
                   let itemjson={id:'1','name':'','maintype':{"type":"",
                                                          "h5":"",
@@ -270,14 +267,13 @@ export default {
                                                              "autoreply":""
                                                          }},'sublist':[]}
                   switch(this.addrSelected){
-                    case 0:
-                    
+                    case 0:                    
                             itemjson.maintype.type="h5";
-                             itemjson.name=this.$refs.inputname.value;
+                            itemjson.name=this.$refs.inputname.value;
+                            itemjson.maintype.h5=this.inputh5;
                             this.tabs.push(itemjson);
                             this.addshow=!this.addshow;
-                            this.num=this.tabs.length-1;     
-                            
+                            this.num=this.tabs.length-1;                                 
                     break;
 
                     case 1:
@@ -288,6 +284,14 @@ export default {
                             this.addshow=!this.addshow;
                             this.num=this.tabs.length-1;  
                     break;
+
+                    case 2:
+                            itemjson.maintype.type="feast";
+                             itemjson.name=this.$refs.inputname.value;
+                             itemjson.maintype.feast=this.feastselected;
+                            this.tabs.push(itemjson);
+                            this.addshow=!this.addshow;
+                            this.num=this.tabs.length-1;  
 
                     default:
 
@@ -315,7 +319,6 @@ export default {
 
                 */
                
-               console.log(currenttype)
                 switch(currenttype){
                     case "h5":
                     this.tabs[this.num].name=this.muname;
