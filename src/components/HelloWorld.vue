@@ -68,7 +68,7 @@ vue的特点是一定要有一个变量记录(即标志在data里面）
                                     </div>
                                     <div class="subtype imgtxt" v-show="subishow">
                                         <ul>
-                                            <li  v-for="(item, index) in artstruct" :class="{check:chk==index}" @click="tabchk(index)">
+                                            <li  v-for="(item, index) in artstruct" :class="{check:index==chk}" @click="tabchk(index)">
                                                 <img>
                                                 <p>{{item.name}}</p>
                                             </li>
@@ -91,7 +91,7 @@ vue的特点是一定要有一个变量记录(即标志在data里面）
                                         <ul>
                                             <li style="overflow:hidden">在线客服:
                                                 <input type="
-                                        " name="" value="" class="zxkfname" placeholder="">
+                                        " name="" value="" class="zxkfname" placeholder="" v-model="online.name">
                                             </li>
                                             <li style="overflow:hidden; line-height:80px">
                                                 <p class="headset">头像设置:</p>
@@ -102,7 +102,7 @@ vue的特点是一定要有一个变量记录(即标志在data里面）
                                             </li>
                                             <li>自动回复:
                                                 <input class="inpureply" type="
-                                        " name="" value="" placeholder="你好，请问有什么可以帮助您？">
+                                        " name="" value="" placeholder="你好，请问有什么可以帮助您？"  v-model="online.autoreply">
                                             </li>
                                         </ul>
                                     </div>
@@ -130,18 +130,18 @@ export default {
  data() {
 
  return{
-         tabs: [{id:'1','name':'标题1','maintype':{"type":"h5",
-                                        "h5":"www.163.com",
+         tabs: [{id:'1','name':'标题1','maintype':{"type":"online",
+                                        "h5":"",
                                         "imgtxt":"",
                                         "feast":"",
                                         "online":{
-                                            "name":"",
+                                            "name":"王伟",
                                             "imghead":"",
-                                            "autoreply":""
+                                            "autoreply":"你好哇，你好！！"
                                         }},'sublist':[]},{id:'2','name':'标题2','maintype':{"type":"feast",
                                         "h5":"",
-                                        "imgtxt":"0",
-                                        "feast":"",
+                                        "imgtxt":"",
+                                        "feast":"中秋大礼包２０１７",
                                         "online":{
                                             "name":"",
                                             "imghead":"",
@@ -151,18 +151,21 @@ export default {
          subtab: [{'spainid':'h5','inputid':'one','labelval':'H5链接'}, {'spainid':'imgtxt','inputid':'two','labelval':'图文模板'},{'spainid':'feast','inputid':'three','labelval':'活动'},{'spainid':'online','inputid':'four','labelval':'在线客服'}],
          num: 0,
          subnum:0,
-         chk:0,
+         chk:1,
          selectArray:["中秋大礼包２０１７","中秋大礼包２０１８","中秋大礼包２０１９","中秋大礼包２０２０"],
-         inputh5:'',
+         
          isShow:false,
          isHide:true,
          addshow:true,
          muname:'',
-         subishow:false,
-         addrSelected:0,
+         subishow:false,   
+          isAdd:true,      
          type:"",
+         addrSelected:0,
+         inputh5:'',
          feastselected:"中秋大礼包２０１７",
-         isAdd:true
+         online:{'name':'','autoreply':''}
+        
          }
     },
     mounted:function(){
@@ -170,7 +173,7 @@ export default {
         this.addshow=!this.addshow;
         this.$refs.addmu.style.display="none"
        }else if(this.tabs.length>=2){
-        this.$refs.addmu.style.width="33.3%";
+        this.$refs.addmu.style.width="33%";
         this.$refs.addmu.style.borderLeft="1px solid #e4e4e4";
        }else if(this.tabs.length==1){
         this.$refs.addmu.style.width="66%";
@@ -179,7 +182,6 @@ export default {
     },
     methods: {
         tabchk(inx){
-        console.log(this.addrSelected);
             this.chk=inx;
         },
         chooseopt(e){
@@ -192,13 +194,13 @@ export default {
             //this.addrSelected=0;
             this.isShow=true;
             this.isHide=false;
-            console.table(this.tabs);
+            //console.table(this.tabs);
             this.muname=this.$refs.inputname.value=this.tabs[this.num].name;            
             this.type=this.tabs[this.num].maintype.type;
 
             var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
              for (let i=0;i<alsubtype.length;i++){
-                var fortype=alsubtype[i].getAttribute("class")
+                var fortype=alsubtype[i].getAttribute("class");
                 if(fortype.indexOf(this.type)>=0){
                     alsubtype[i].style.display="block";
                     this.addrSelected=i;
@@ -206,19 +208,31 @@ export default {
                      alsubtype[i].style.display="none";
                 }
             }
-
             switch(this.type){
                 case "h5":
                     this.inputh5=this.$refs.h5.value=this.tabs[this.num].maintype.h5;
+                    this.chk='';
+                    this.feastselected="";
                 break;
                 case "imgtxt":
+                this.inputh5='';
+
                     this.chk=this.tabs[this.num].maintype.imgtxt;
+                    this.feastselected="";
+                    break;
                 case "feast":
-                    this.feastselected=this.feastselected;
+                    this.inputh5='';
+                     this.chk='';
+                     console.log(this.tabs[this.num].maintype.feast)
+                    this.feastselected=this.tabs[this.num].maintype.feast;
+                    break;
                     default:
+                        this.inputh5='';
+                         this.chk='';
+                        this.feastselected='';
+                        this.online.name=this.tabs[this.num].maintype.online.name;
+                        this.online.autoreply=this.tabs[this.num].maintype.online.autoreply;
             }
-
-
         }
         ,subtabs(inx){       
         this.addrSelected=inx;
@@ -257,6 +271,7 @@ export default {
               return false;
             }
             if(this.isAdd){
+            console.log("添加一项")
                   let itemjson={id:'1','name':'','maintype':{"type":"",
                                                          "h5":"",
                                                          "imgtxt":"",
@@ -279,6 +294,7 @@ export default {
                     case 1:
                             itemjson.maintype.type="imgtxt";
                              itemjson.name=this.$refs.inputname.value;
+
                              itemjson.maintype.imgtxt=this.chk
                             this.tabs.push(itemjson);
                             this.addshow=!this.addshow;
@@ -292,8 +308,15 @@ export default {
                             this.tabs.push(itemjson);
                             this.addshow=!this.addshow;
                             this.num=this.tabs.length-1;  
-
+                            break;
                     default:
+                            itemjson.name=this.$refs.inputname.value;
+                             itemjson.maintype.type="online";
+                            itemjson.maintype.online.name=this.online.name;
+                            itemjson.maintype.online.autoreply=this.online.autoreply;
+                            this.tabs.push(itemjson);
+                            this.addshow=!this.addshow;
+                            this.num=this.tabs.length-1;  
 
 
                   }
@@ -301,8 +324,9 @@ export default {
                  
 
             }else{
- 
-                var currenttype=this.tabs[this.num].maintype.type;
+ console.log("修改一项")
+                var currentnum=this.tabs[this.num];
+                var currenttype=this.addrSelected;
                /*
                  {id:'1','name':'标题1','maintype':{"type":"h5",
                                                          "h5":"www.163.com",
@@ -318,20 +342,35 @@ export default {
 
 
                 */
-               
+               this.tabs[this.num].name=this.muname;
+             
                 switch(currenttype){
-                    case "h5":
-                    this.tabs[this.num].name=this.muname;
+                    case 0:
+                    
                     this.tabs[this.num].maintype.h5=this.inputh5;
                     this.tabs[this.num].maintype.type="h5";
                     console.log(this.tabs)
                     break;
-
-                    case "imgtxt":
-                     
+                    case 1:
+                    this.tabs[this.num].maintype.h5='';
+                    console.log(this.chk)
+                     this.tabs[this.num].maintype.imgtxt=this.chk;
+                     this.tabs[this.num].maintype.type="imgtxt";
                      break;
+
+                     case 2:
+console.log(this.feastselected)
+                     this.tabs[this.num].maintype.feast=this.feastselected;
+                     this.tabs[this.num].maintype.type="feast";
+                     break;
+
+                     default:
+                         this.tabs[this.num].maintype.name=this.online.name;
+                         this.tabs[this.num].maintype.autoreply=this.online.autoreply;
                 }
             }
+
+            console.table(this.tabs[this.num])
         }
     }
 }
