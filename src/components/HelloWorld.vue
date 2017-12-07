@@ -1,7 +1,5 @@
 /*
 vue的特点是一定要有一个变量记录(即标志在data里面）
-
-
  */
 
 
@@ -38,7 +36,7 @@ vue的特点是一定要有一个变量记录(即标志在data里面）
                             <!--      <li  class="mu">嘉华活动</li>
                                 <li  class="mu">联系我们</li> -->
                               
-                                <MainLi v-for="(item,index) in tabs" :class="{current:index==num}" :name="item.name"  @select="tab(index)" @addsub="addsubck($ev)"></MainLi>
+                                <MainLi v-for="(item,index) in tabs" :class="{current:index==num}" :name="item.name"  @select="tab(index)" @addsub="addsubck(index)" @subli="sublibtn($event)" :subsnum="childnum" :sublistArray="item.sublist" ></MainLi>
                                <!--<li>{{muname}}</li>-->
                         </ul>
                     </div>
@@ -138,7 +136,35 @@ export default {
                                             "name":"王伟",
                                             "imghead":"",
                                             "autoreply":"你好哇，你好！！"
-                                        }},'sublist':[]},{id:'2','name':'标题2','maintype':{"type":"feast",
+                                        }},'sublist':[{
+                                    id:11,
+                                    subname:"1-1",
+                                    subtype:{
+                                        type:"h5",
+                                        h5:"http://www.baidu1.com",
+                                        imgtxt:"",
+                                        feast:"",
+                                        online:{
+                                            name:"",
+                                            imghead:"",
+                                            autoreply:""
+                                        }
+                                     }
+                                 },{
+                                    id:12,
+                                    subname:"1-2",
+                                    subtype:{
+                                        type:"h5",
+                                        h5:"http://www.baidu2<.com",
+                                        imgtxt:"",
+                                        feast:"",
+                                        online:{
+                                            name:"",
+                                            imghead:"",
+                                            autoreply:""
+                                        }
+                                     }
+                                 },]},{id:'2','name':'标题2','maintype':{"type":"feast",
                                         "h5":"",
                                         "imgtxt":"",
                                         "feast":"中秋大礼包２０１７",
@@ -164,7 +190,8 @@ export default {
          addrSelected:0,
          inputh5:'',
          feastselected:"中秋大礼包２０１７",
-         online:{'name':'','autoreply':''}
+         online:{'name':'','autoreply':''},
+         childnum:0
         
          }
     },
@@ -181,6 +208,10 @@ export default {
        }
     },
     methods: {
+        sublibtn(num){
+            this.childnum=num;
+            this.num="";  //这里应该多写个样式来修改
+        },
         tabchk(inx){
             this.chk=inx;
         },
@@ -245,8 +276,8 @@ export default {
                 }
             }
         }
-        ,addsubck(){
-            alert(1234)
+        ,addsubck(index){
+            alert(index)
         }
         ,addmenu(){
         this.isAdd=true;

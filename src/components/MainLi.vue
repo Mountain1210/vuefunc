@@ -2,7 +2,8 @@
 <li class="mu" @click="$emit('select')"><span>{{name}}</span>
 <div id="triangledown"></div>
                                 <ul class="submenu" >
-                                    <li class="addsubmenu" @click.stop="$emit('addsub')">+</li>
+                                    <li v-for="(item,index) in sublistArray" @click.stop="$emit('subli',index)" :class="{check1:index==subsnum}">{{item.subname}}</li>
+                                    <li class="addsubmenu" @click.stop="$emit('addsub')" >+</li>
                                 </ul>
                             </li>
                             
@@ -11,10 +12,10 @@
 <script>
 export default {
     name:'mainli',
-    props:["name"],
+    props:["name","sublistArray","subsnum"],
     data(){
         return {
-            
+           
         }
     }
 }
