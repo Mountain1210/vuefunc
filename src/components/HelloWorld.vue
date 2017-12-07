@@ -36,7 +36,7 @@ vue的特点是一定要有一个变量记录(即标志在data里面）
                             <!--      <li  class="mu">嘉华活动</li>
                                 <li  class="mu">联系我们</li> -->
                               
-                                <MainLi v-for="(item,index) in tabs" :class="{current:index==num}" :name="item.name"  @select="tab(index)" @addsub="addsubck(index)" @subli="sublibtn($event)" :subsnum="childnum" :sublistArray="item.sublist" ></MainLi>
+                                <MainLi v-for="(item,index) in tabs" :class="[{sl:submenuisshow},{current:index==num}]" :name="item.name"  @select="tab(index)" @addsub="addsubck(index)" @subli="sublibtn($event)" :subsnum="childnum" :sublistArray="item.sublist" ></MainLi>
                                <!--<li>{{muname}}</li>-->
                         </ul>
                     </div>
@@ -140,10 +140,10 @@ export default {
                                     id:11,
                                     subname:"1-1",
                                     subtype:{
-                                        type:"h5",
-                                        h5:"http://www.baidu1.com",
+                                        type:"feast",
+                                        h5:"",
                                         imgtxt:"",
-                                        feast:"",
+                                        feast:"中秋大礼包２０１９",
                                         online:{
                                             name:"",
                                             imghead:"",
@@ -154,9 +154,9 @@ export default {
                                     id:12,
                                     subname:"1-2",
                                     subtype:{
-                                        type:"h5",
-                                        h5:"http://www.baidu2<.com",
-                                        imgtxt:"",
+                                        type:"imgtxt",
+                                        h5:"",
+                                        imgtxt:"1",
                                         feast:"",
                                         online:{
                                             name:"",
@@ -172,7 +172,21 @@ export default {
                                             "name":"",
                                             "imghead":"",
                                             "autoreply":""
-                                        }},'sublist':[]}],
+                                        }},'sublist':[{
+                                    id:21,
+                                    subname:"2-1",
+                                    subtype:{
+                                        type:"online",
+                                        h5:"http://www.baidu3.com",
+                                        imgtxt:"",
+                                        feast:"",
+                                        online:{
+                                            name:"磊磊",
+                                            imghead:"",
+                                            autoreply:"这是我的"
+                                        }
+                                     }
+                                 }]}],
          artstruct:[{"imgurl":"","name":"空的"},{"imgurl":"","name":"上文下图"},{"imgurl":"","name":"上下文中图"},{"imgurl":"","name":"上文下图"}],
          subtab: [{'spainid':'h5','inputid':'one','labelval':'H5链接'}, {'spainid':'imgtxt','inputid':'two','labelval':'图文模板'},{'spainid':'feast','inputid':'three','labelval':'活动'},{'spainid':'online','inputid':'four','labelval':'在线客服'}],
          num: 0,
@@ -185,13 +199,14 @@ export default {
          addshow:true,
          muname:'',
          subishow:false,   
-          isAdd:true,      
+         isAdd:true,      
          type:"",
+         submenuisshow:false,
          addrSelected:0,
          inputh5:'',
          feastselected:"中秋大礼包２０１７",
          online:{'name':'','autoreply':''},
-         childnum:0
+         childnum:-1
         
          }
     },
@@ -210,25 +225,64 @@ export default {
     methods: {
         sublibtn(num){
             this.childnum=num;
-            this.num="";  //这里应该多写个样式来修改
+            this.submenuisshow=true;
+            this.showEdit();
+
+            var subItemArray=this.tabs[this.num].sublist[num];
+            var subtype=this.type=subItemArray.subtype.type;
+
+            this.muname=this.$refs.inputname.value=subItemArray.subname;  
+            var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
+             for (let i=0;i<alsubtype.length;i++){
+                var fortype=alsubtype[i].getAttribute("class");
+                if(fortype.indexOf(this.type)>=0){
+                    alsubtype[i].style.display="block";
+                    this.addrSelected=i;
+                }else{
+                     alsubtype[i].style.display="none";
+                }
+            } 
+            switch(subtype){
+                case "h5":
+                    this.inputh5=this.$refs.h5.value=subItemArray.subtype.h5;
+                    this.chk='';
+                    this.feastselected="";
+                break;
+                case "imgtxt":
+                    this.inputh5='';
+                    this.chk=subItemArray.subtype.imgtxt;
+                    this.feastselected="";
+                break;
+                case "feast":
+                    this.inputh5='';
+                    this.chk='';
+                    this.feastselected=subItemArray.subtype.feast;
+                    break;
+                default:
+                    this.inputh5='';
+                    this.chk='';
+                    this.feastselected='';
+                    this.online.name=subItemArray.subtype.online.name;
+                    this.online.autoreply=subItemArray.subtype.online.autoreply;
+            }
         },
         tabchk(inx){
             this.chk=inx;
         },
-        chooseopt(e){
-  
+        chooseopt(e){  
             console.log(e)
         },
-        tab(index) {
-            this.num = index;
-            this.isAdd=false;
-            //this.addrSelected=0;
+        showEdit(){
             this.isShow=true;
             this.isHide=false;
-            //console.table(this.tabs);
+        }
+        ,tab(index) {
+            this.num = index;
+            this.isAdd= this.submenuisshow=false;
+            this.childnum=-1;
+            this.showEdit();
             this.muname=this.$refs.inputname.value=this.tabs[this.num].name;            
             this.type=this.tabs[this.num].maintype.type;
-
             var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
              for (let i=0;i<alsubtype.length;i++){
                 var fortype=alsubtype[i].getAttribute("class");
@@ -272,37 +326,52 @@ export default {
                 if(i==inx){
                     alsubtype[i].style.display="block";
                 }else{
-                     alsubtype[i].style.display="none";
+                    alsubtype[i].style.display="none";
                 }
             }
         }
         ,addsubck(index){
-            alert(index)
+              this.isShow=true;
+              this.isHide=false;
+              this.isAdd=true;
+              var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
+              this.subnum=this.chk=0;
+              this.addrSelected=0;
+              this.inputh5='';
+               this.isShow=true;
+               this.isHide=false;
+               this.muname="";
+               alsubtype[0].style.display="block";
+               for (let i=0;i<alsubtype.length;i++){
+                     if(i>0){             
+                          alsubtype[i].style.display="none";
+                          //this.subishow=this.subishow;
+                     }
+                 }
         }
         ,addmenu(){
         this.isAdd=true;
-         var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
-         this.subnum=this.chk=0;
-         this.addrSelected=0;
-         this.inputh5='';
-          this.isShow=true;
-          this.isHide=false;
-          this.muname="";
-          alsubtype[0].style.display="block";
-          for (let i=0;i<alsubtype.length;i++){
-                if(i>0){             
-                     alsubtype[i].style.display="none";
-                     //this.subishow=this.subishow;
-                }
-            }
-
+        var alsubtype=this.$refs.allsubtype.querySelectorAll('.subtype');
+        this.subnum=this.chk=0;
+        this.addrSelected=0;  //菜单内容选项
+        this.inputh5='';
+         this.isShow=true;
+         this.isHide=false;
+         this.muname="";
+         alsubtype[0].style.display="block";
+         for (let i=0;i<alsubtype.length;i++){
+               if(i>0){             
+                    alsubtype[i].style.display="none";
+                    //this.subishow=this.subishow;
+               }
+           }
         }
         ,preview(){
             if(this.isHide){
               return false;
             }
             if(this.isAdd){
-            console.log("添加一项")
+                  console.log("添加一项")
                   let itemjson={id:'1','name':'','maintype':{"type":"",
                                                          "h5":"",
                                                          "imgtxt":"",
@@ -347,40 +416,18 @@ export default {
                             itemjson.maintype.online.autoreply=this.online.autoreply;
                             this.tabs.push(itemjson);
                             this.addshow=!this.addshow;
-                            this.num=this.tabs.length-1;  
-
-
+                            this.num=this.tabs.length-1;
                   }
-
-                 
-
             }else{
- console.log("修改一项")
+                console.log("修改一项")
                 var currentnum=this.tabs[this.num];
                 var currenttype=this.addrSelected;
-               /*
-                 {id:'1','name':'标题1','maintype':{"type":"h5",
-                                                         "h5":"www.163.com",
-                                                         "imgtxt":"",
-                                                         "feast":"",
-                                                         "online":{
-                                                             "name":"",
-                                                             "imghead":"",
-                                                             "autoreply":""
-                                                         }},'sublist':[]}
-               
-
-
-
-                */
-               this.tabs[this.num].name=this.muname;
+                this.tabs[this.num].name=this.muname;
              
                 switch(currenttype){
-                    case 0:
-                    
+                    case 0:                    
                     this.tabs[this.num].maintype.h5=this.inputh5;
                     this.tabs[this.num].maintype.type="h5";
-                    console.log(this.tabs)
                     break;
                     case 1:
                     this.tabs[this.num].maintype.h5='';
@@ -388,20 +435,17 @@ export default {
                      this.tabs[this.num].maintype.imgtxt=this.chk;
                      this.tabs[this.num].maintype.type="imgtxt";
                      break;
-
                      case 2:
-console.log(this.feastselected)
                      this.tabs[this.num].maintype.feast=this.feastselected;
                      this.tabs[this.num].maintype.type="feast";
                      break;
-
                      default:
                          this.tabs[this.num].maintype.name=this.online.name;
                          this.tabs[this.num].maintype.autoreply=this.online.autoreply;
                 }
             }
 
-            console.table(this.tabs[this.num])
+            //console.table(this.tabs[this.num])
         }
     }
 }
